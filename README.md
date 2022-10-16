@@ -37,7 +37,9 @@ Benefits of Event Sourcing
 - Improves write performance. All event types are simply appended to the event store. There are no update or delete operations.
 - In the case of failure, the event store can be used to restore read database
 
-![image-20221012204544521](/Users/asim.kilic/Library/Application Support/typora-user-images/image-20221012204544521.png)
+
+
+<img src="https://raw.githubusercontent.com/asimkilic/cqrs-event-sourcing-with-kafka/master/assets/image-20221012204544521.png" />
 
 We are going to build a bank account command API and a bank account query API. A bank account command API is responsible for handling the rights or commands and the bank account query API responsible for handling the reads. Notice the different command objects that the bank account API will be able to handle, including an  'OpenAccountCommand' used to open a new bank account, 'DepositFundsCommand' used to deposit funds into a bank account, 'WithdrawFundCommand' that will be used to withdraw funds from an account and ''ClosedAccountCommand' that will be used to close a bank account.
 
