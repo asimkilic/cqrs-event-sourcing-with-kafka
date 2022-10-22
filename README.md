@@ -170,3 +170,43 @@ Event Sotre - Key Considerations
 - Event should be stored in chronological order, and new events should be appended to the previous event
 - The state of the aggregate should be recreatable by replaying the event store
 - Implement optimistic concurrency control
+
+
+
+<img src="https://raw.githubusercontent.com/asimkilic/cqrs-event-sourcing-with-kafka/master/assets/image-20221016183825740.png" />
+
+What a Kafka producer is and how it works ?
+
+Consider the following Kafka architecture drawing, a Kafka producer is used to send our produce messages to one or more Kafka topics. Kafka produces also serializes compresses and load balances data amoung Kafka brokers through partitioning .
+
+What is a broker? 
+
+It is a server running in a Kafka cluster, usually in the form of a container. Kafka clusters are usually made up of one or more brokers. Having multiple Kafka brokers allows for load balancing redundancy and reliable fail over. Brokers are stateless and rely on Apache Zookeeper to manage the state of the cluster. Apache Zookeeper is thus responsible to manage the cluster and election of the broker leader. It is advised to utilize a minimum of three brokers to achieve reliable fail over. However, a single broker can handle hundreds of thousands of messages without a performance impact.
+
+<img src="https://raw.githubusercontent.com/asimkilic/cqrs-event-sourcing-with-kafka/master/assets/image-20221016183825741.png" />
+
+What is a partitioning in Kafka?
+
+Topics are divided into partitions in a Kafka cluster, and partitions are replicated across brokers. But what exactly is a topic? You can view a Kafka topiac as a channel through which event data is streamed, produces, always publishes or produces event messages to topics while consumers read messages from a topic that they subscribe to. Some people like to compare a topic with a database table, while others compared to a log or a queue.
+
+Let's say we have three producers, each writing a different topic and three consumers, each subscribing to one of the three topics. Let's say that producer A produces a message to topic one. As soon as a new message is produced to topic one, the consumer will detect that the topic of set has changed and it will consume the event message. Similarly, if producer B produces an event message to topic two, then consumer B will also take that the offset has changed, and it will consume the new event message that has been published to topic two. The same with producer three,
+
+Domain Driven Design (DDD)
+
+- The term "domain-driven design" was coined by Eric Evans in 2003
+- An approach to structure and model software in a way that it matches the business domain
+- It places the primary focus of a software project on the core area of the business (the core domain)
+- Refers to prolems as domains and aims to establish a common language to talk about these problems 
+- Describes independent problem areas as Bounded Contexts
+
+What is a bounded context ?
+
+- It is an independent problem area
+- Describes a logical boundary within which a particular model is defined and applicable.
+- Each bounded context correlates to a microservice. (e.g., Bank Account Microservice)
+
+
+
+<img src="https://raw.githubusercontent.com/asimkilic/cqrs-event-sourcing-with-kafka/master/assets/image-20221016183825742.png" />
+
+Let's say we have a topic called *FundsDepositEvent* . Once somebody deposits fund into a bank account, a producer produces the *FundsDepositedEvent* into Kafka,notice the Kafka commit log, that starts at offset zero all the way through to offset 1003. As we've mentioned before, the order is very important. Every time a producer produces a new event message to Kafka, it will append to the Kafka log. We have two consumers here an *Account Consumer* that is used to consume the *FundsDeposiedEvent* and update the bank account read database for example, and then another consumer called *Notification Consumer* which could send a sms to a customer when funds is deposited into his or her account. Notice that account consumer has already consumed messages zero through to 1001 and that it is busy consuming the funds deposited event at offset 1002, whereas the notification consumer has only consumed messages zero through to six and that could be for various reasons. Perhaps it was switched off or it failed and it was rebooted. It needs to catch up. Now remember the reason that the notification consumer and account consumers offsets differ is because they group IDs are different. Notice that the account consumer group id is bankaccConsumer and the notification consumer group id is called accNotifyConsumer. That is why the offsets are tracked separately. Now let's say that we want to enable the notification consumer to catch up. Container orchestration engines easily allows us to scale up microservices, either by manually configuring an amount of instances that you want to run or to tell Kubernetes to auto scale the amount of instances required. Kafka absolutely supports multiple instances running on the same consumer group. In other words, we could, for example start up four instances of the notification consumer and Kafka will allow them to effectively distribute the event messages between the different instances. Just a clarify, a. Kafka consumer must belong to a consumer group, and a consumer group can have one or more consumers. And then the offset is tracked per consumer group and not per consumer

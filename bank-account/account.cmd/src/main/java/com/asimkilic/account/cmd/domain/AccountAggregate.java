@@ -15,6 +15,10 @@ public class AccountAggregate extends AggregateRoot {
     private Boolean active;
     private double balance;
 
+    public double getBalance() {
+        return this.balance;
+    }
+
     public AccountAggregate(OpenAccountCommand command) {
         raiseEvent(AccountOpenedEvent.builder()
                 .id(command.getId())
@@ -31,7 +35,7 @@ public class AccountAggregate extends AggregateRoot {
         this.balance = event.getOpeningBalance();
     }
 
-    public void depositFund(double amount) {
+    public void depositFunds(double amount) {
         if (!active) {
             throw new IllegalStateException("Funds cannot be deposited into a closed bank account!");
         }
