@@ -18,6 +18,7 @@ public class AccountEventConsumer implements EventConsumer {
     @KafkaListener(topics = "AccountOpenedEvent", groupId = "${spring.kafka.consumer.group-id}")
     @Override
     public void consume(AccountOpenedEvent event, Acknowledgment ack) {
+        System.out.print("consume metoduna geldi.");
         eventHandler.on(event);
         ack.acknowledge(); // it commits offset to kafka
     }
