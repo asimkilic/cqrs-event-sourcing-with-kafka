@@ -9,10 +9,10 @@
       hibernate:
         ddl-auto: update
       #MySQL jpa settings
-     # database-platform: org.hibernate.dialect.mysql8dialect
-     # show-sql: true
-     # hibernate:
-     #   ddl-auto: update
+      #database-platform: org.hibernate.dialect.mysql8dialect
+      #show-sql: true
+      #hibernate:
+        #ddl-auto: update
     datasource:
       # postgreSQL datasource
       url: jdbc:postgresql://localhost:5432/bankAccount
