@@ -1,10 +1,6 @@
 package com.asimkilic.account.cmd;
 
-import com.asimkilic.account.cmd.api.commands.CloseAccountCommand;
-import com.asimkilic.account.cmd.api.commands.CommandHandler;
-import com.asimkilic.account.cmd.api.commands.DepositFundsCommand;
-import com.asimkilic.account.cmd.api.commands.OpenAccountCommand;
-import com.asimkilic.account.cmd.api.commands.WithdrawFundsCommand;
+import com.asimkilic.account.cmd.api.commands.*;
 import com.asimkilic.cqrs.core.infrastructure.CommandDispatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -31,5 +27,6 @@ public class CommandApplication {
         commandDispatcher.registerHandler(DepositFundsCommand.class, commandHandler::handle);
         commandDispatcher.registerHandler(WithdrawFundsCommand.class, commandHandler::handle);
         commandDispatcher.registerHandler(CloseAccountCommand.class, commandHandler::handle);
+        commandDispatcher.registerHandler(RestoreReadDbCommand.class, commandHandler::handle);
     }
 }
